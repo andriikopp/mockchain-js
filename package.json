@@ -1,0 +1,33 @@
+{
+  "name": "mockchain",
+  "version": "1.0.0",
+  "description": "MockchainJS is a lightweight, simple blockchain-inspired ledger that allows users easily and quickly achieve blockchain-like behavior for NodeJS.",
+  "main": "index.js",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "express": "^4.18.2",
+    "stormdb": "^0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andriikopp/mockchain-js.git"
+  },
+  "keywords": [
+    "blockchain",
+    "lightweight",
+    "database",
+    "ledger",
+    "nodejs"
+  ],
+  "author": "andriikopp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andriikopp/mockchain-js/issues"
+  },
+  "homepage": "https://github.com/andriikopp/mockchain-js#readme"
+}
