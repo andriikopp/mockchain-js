@@ -108,7 +108,7 @@ app.post('/block', express.json({ type: '*/*' }), (req, res) => {
             pendingBlocks.push(newBlock);
 
             res.status(200).send({
-                'blockHash': newBlock.getHash()
+                'blockHash': blockchain.getBlockHash(newBlock)
             });
         } else {
             res.status(400).send(BAD_REQUEST_RESPONSE);
@@ -132,9 +132,7 @@ app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
             const confirmedBlocks = [];
 
             for (let i = 0; i < pendingBlocks.length; i++) {
-                blockchain.addBlock(pendingBlocks[i]);
-
-                confirmedBlocks.push(pendingBlocks[i].getHash());
+                confirmedBlocks.push(blockchain.addBlock(pendingBlocks[i]));
             }
 
             res.status(200).send({

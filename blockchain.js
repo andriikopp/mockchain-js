@@ -10,12 +10,8 @@ class Block {
     constructor(blockData = []) {
         this.blockTime = Date.now().toString();
         this.blockData = blockData;
-        this.blockHash = this.getHash();
         this.previousBlockHash = '';
-    }
-
-    getHash() {
-        return SHA256(this.previousBlockHash + this.blockTime + JSON.stringify(this.blockData)).toString();
+        this.blockHash = SHA256(this.previousBlockHash + this.blockTime + JSON.stringify(this.blockData)).toString();
     }
 }
 
@@ -29,6 +25,10 @@ class Blockchain {
             this.chain = db.get('chain').value();
             this.hashList = db.get('hashList').value();
         }
+    }
+
+    getBlockHash(block) {
+        return SHA256(block.previousBlockHash + block.blockTime + JSON.stringify(block.blockData)).toString();
     }
 
     getLastBlock() {
@@ -45,7 +45,7 @@ class Blockchain {
 
     addBlock(block) {
         block.previousBlockHash = this.getLastBlock().blockHash;
-        block.blockHash = block.getHash();
+        block.blockHash = this.getBlockHash(block);
 
         this.chain.push(Object.freeze(block));
         this.hashList[block.blockHash] = this.chain.length - 1;
@@ -61,7 +61,9 @@ class Blockchain {
             const currentBlock = blockchain.chain[i];
             const prevBlock = blockchain.chain[i - 1];
 
-            if (currentBlock.blockHash !== currentBlock.getHash() || prevBlock.blockHash !== currentBlock.previousBlockHash) {
+            if (currentBlock.blockHash !== blockchain.getBlockHash(currentBlock) ||
+                prevBlock.blockHash !== currentBlock.previousBlockHash) {
+
                 return false;
             }
         }
@@ -78,7 +80,9 @@ class Blockchain {
             const currentBlock = blockchain.chain[i];
             const prevBlock = blockchain.chain[i - 1];
 
-            if (currentBlock.blockHash !== currentBlock.getHash() || prevBlock.blockHash !== currentBlock.previousBlockHash) {
+            if (currentBlock.blockHash !== blockchain.getBlockHash(currentBlock) ||
+                prevBlock.blockHash !== currentBlock.previousBlockHash) {
+
                 break;
             } else {
                 validChain.push(currentBlock);
