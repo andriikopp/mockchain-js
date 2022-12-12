@@ -8,10 +8,11 @@ const validators = require('./validators.js');
 
 const argv = process.argv;
 
-if (argv.length < 5 || argv[2] !== '-n' || argv[4] !== '-p') {
+if (argv.length < 6 || argv[2] !== '-n' || argv[4] !== '-p') {
     console.log('\nWelcome to MockchainJS!\n\n' +
         'Run node index.js with the following options:\n\n' +
-        '-n\tNode name\n-p\tPort number\n');
+        '-n\tNode name\n' +
+        '-p\tPort number\n');
     return;
 }
 
@@ -107,9 +108,15 @@ app.post('/block', express.json({ type: '*/*' }), (req, res) => {
         const fromPrivateKey = req.body.fromPrivateKey;
         const to = req.body.to;
         const metadata = req.body.metadata;
+        const timestamp = Number.parseInt(req.body.timestamp);
 
-        if (from && fromPrivateKey && to && metadata && from.toString() === SHA256(fromPrivateKey).toString()) {
-            const newBlock = new Block({
+        const previousBlock = blockchain.getLastBlock();
+
+        if (from && fromPrivateKey && to && metadata && timestamp &&
+            from.toString() === SHA256(fromPrivateKey).toString() &&
+            timestamp > Number.parseInt(previousBlock.blockTime)) {
+
+            const newBlock = new Block(timestamp, {
                 'from': from,
                 'to': to,
                 'metadata': metadata
@@ -142,8 +149,10 @@ app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
             const confirmedBlocks = [];
 
             for (let i = 0; i < pendingBlocks.length; i++) {
-                confirmedBlocks.push(blockchain.addBlock(pendingBlocks[i]));
+                confirmedBlocks.push(blockchain.addBlock(new Block(pendingBlocks[i].blockTime, pendingBlocks[i].blockData)));
             }
+
+            pendingBlocks.length = 0;
 
             res.status(200).send({
                 'blockHashes': confirmedBlocks

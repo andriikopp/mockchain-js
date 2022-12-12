@@ -2,8 +2,8 @@ const SHA256 = require('crypto-js/sha256');
 const StormDB = require('stormdb');
 
 class Block {
-    constructor(blockData = []) {
-        this.blockTime = Date.now().toString();
+    constructor(blockTime, blockData = []) {
+        this.blockTime = blockTime;
         this.blockData = blockData;
         this.previousBlockHash = '';
         this.blockHash = SHA256(this.previousBlockHash + this.blockTime + JSON.stringify(this.blockData)).toString();
@@ -17,7 +17,7 @@ class Blockchain {
 
         this.db.default({ chain: [], hashList: {} });
 
-        this.chain = [new Block()];
+        this.chain = [new Block(Number(0).toString())];
         this.hashList = {};
         this.hashList[this.chain[0].blockHash] = 0;
 
