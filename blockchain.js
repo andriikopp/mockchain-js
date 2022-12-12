@@ -68,6 +68,30 @@ class Blockchain {
 
         return true;
     }
+
+    rejectInvalidBlocks(blockchain = this) {
+        const validChain = [blockchain.chain[0]];
+        const validHashList = {};
+        validHashList[validChain[0].blockHash] = 0;
+
+        for (let i = 1; i < blockchain.chain.length; i++) {
+            const currentBlock = blockchain.chain[i];
+            const prevBlock = blockchain.chain[i - 1];
+
+            if (currentBlock.blockHash !== currentBlock.getHash() || prevBlock.blockHash !== currentBlock.previousBlockHash) {
+                break;
+            } else {
+                validChain.push(currentBlock);
+                validHashList[currentBlock.blockHash] = i;
+            }
+        }
+
+        this.chain = validChain;
+        this.hashList = validHashList;
+
+        db.set('chain', this.chain).save();
+        db.set('hashList', this.hashList).save();
+    }
 }
 
 module.exports = { Block, Blockchain };

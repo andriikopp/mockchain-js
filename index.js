@@ -39,11 +39,11 @@ app.get('/account', (req, res) => {
 
 app.get('/current', (req, res) => {
     try {
-        if (blockchain.isValid()) {
-            res.status(200).send(blockchain.chain.length.toString());
-        } else {
-            res.status(400).send(BAD_REQUEST_RESPONSE);
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
         }
+
+        res.status(200).send(blockchain.chain.length.toString());
     } catch (err) {
         res.status(500).send(ERROR_RESPONSE);
         console.error(err);
@@ -52,17 +52,17 @@ app.get('/current', (req, res) => {
 
 app.get('/height/:height', (req, res) => {
     try {
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
+        }
+
         if (req.params.height < 0 || req.params.height > blockchain.chain.length - 1) {
             res.status(400).send(BAD_REQUEST_RESPONSE);
         } else {
-            if (blockchain.isValid()) {
-                const block = blockchain.getBlockByNumber(req.params.height);
-                block.blockHeight = req.params.height;
+            const block = blockchain.getBlockByNumber(req.params.height);
+            block.blockHeight = req.params.height;
 
-                res.status(200).send(block);
-            } else {
-                res.status(400).send(BAD_REQUEST_RESPONSE);
-            }
+            res.status(200).send(block);
         }
     } catch (err) {
         res.status(500).send(ERROR_RESPONSE);
@@ -72,11 +72,11 @@ app.get('/height/:height', (req, res) => {
 
 app.get('/hash/:hash', (req, res) => {
     try {
-        if (blockchain.isValid()) {
-            res.status(200).send(blockchain.getBlockByHash(req.params.hash));
-        } else {
-            res.status(400).send(BAD_REQUEST_RESPONSE);
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
         }
+
+        res.status(200).send(blockchain.getBlockByHash(req.params.hash));
     } catch (err) {
         res.status(500).send(ERROR_RESPONSE);
         console.error(err);
@@ -85,14 +85,16 @@ app.get('/hash/:hash', (req, res) => {
 
 app.post('/block', express.json({ type: '*/*' }), (req, res) => {
     try {
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
+        }
+
         const from = req.body.from;
         const fromPrivateKey = req.body.fromPrivateKey;
         const to = req.body.to;
         const metadata = req.body.metadata;
 
-        if ((from && fromPrivateKey && to && metadata) &&
-            from.toString() === SHA256(fromPrivateKey).toString() &&
-            blockchain.isValid()) {
+        if (from && fromPrivateKey && to && metadata && from.toString() === SHA256(fromPrivateKey).toString()) {
 
             const blockHash = blockchain.addBlock(new Block({
                 'from': from,
