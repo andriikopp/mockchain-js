@@ -17,6 +17,20 @@ This approach allows MockchainJS to deliver fast transactions.
 Each time blockchain is addressed through API endpoints, the chain is checked, and blocks starting from the first invalid one are rejected.
 The SHA256 encryption algorithm is used to check the consistency of the blockchain.
 
+### 🤖 Programmability
+MockchainJS offers simple programmability to execute *oversimplified* **smart-contracts** that should be given as the JavaScript code in the ```blockData.metadata``` property:
+```javascript
+{
+  "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "fromPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
+  "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "metadata": "(x, y) => x + y"
+}
+```
+Deployed "contracts" can be called using the ```/call``` API gateway.
+A contract is addressed by a hash value of the block in which it was published.
+Arguments should be passed as the string enclosed in parentheses, i.e. ```"(2, 2)"```.
+
 ### Dependencies:
 - ⚙️ express
 - 🔐 crypto-js, crypto
@@ -116,6 +130,22 @@ The SHA256 encryption algorithm is used to check the consistency of the blockcha
 ```json
 {
     "blockHashes": ["a0fce24c1413b8a550fdd5a59c48eea15cc35478b97fed85ccf0843c0bc9ccfc", "999f9758bb4f853b4000e39c6be8a0006e3ecb2e38031389350a2cf735a69465", "762e2cefdb15c9e59c3381b79b3e2ed1c45ca6f8bda98366f16f806d1f92ce1a"]
+}
+```
+---
+#### 🔴 /call
+- Method: **POST**
+- Request:
+```json
+{
+	"block": "49ae5d253e05bd9982a2cfba8c30393f47654d5e0838f346b54df9d36dcc3d45",
+	"args": "(2, 2)"
+}
+```
+- Response:
+```json
+{
+    "result": 4
 }
 ```
 

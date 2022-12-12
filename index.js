@@ -147,6 +147,31 @@ app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
     }
 });
 
+app.post('/call', express.json({ type: '*/*' }), (req, res) => {
+    try {
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
+        }
+
+        const block = req.body.block;
+        const args = req.body.args;
+
+        if (block && args) {
+            const code = blockchain.getBlockByHash(block).blockData.metadata;
+            const result = eval(`(${code})${args}`);
+
+            res.status(200).send({
+                'result': result
+            });
+        } else {
+            res.status(400).send(BAD_REQUEST_RESPONSE);
+        }
+    } catch (err) {
+        res.status(500).send(ERROR_RESPONSE);
+        console.error(err);
+    }
+});
+
 app.listen(PORT_NUMBER, () => {
     console.log(`Listening on port ${PORT_NUMBER}`);
 });
