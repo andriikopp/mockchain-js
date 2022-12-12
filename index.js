@@ -4,8 +4,12 @@ const SHA256 = require('crypto-js/sha256');
 
 const { Block, Blockchain } = require('./blockchain.js');
 
+const validators = require('./validators.js');
+
 const app = express();
 const blockchain = new Blockchain();
+
+const pendingBlocks = [];
 
 const PORT_NUMBER = 3000;
 const ADDRESS_LENGTH = 64;
@@ -95,15 +99,46 @@ app.post('/block', express.json({ type: '*/*' }), (req, res) => {
         const metadata = req.body.metadata;
 
         if (from && fromPrivateKey && to && metadata && from.toString() === SHA256(fromPrivateKey).toString()) {
-
-            const blockHash = blockchain.addBlock(new Block({
+            const newBlock = new Block({
                 'from': from,
                 'to': to,
                 'metadata': metadata
-            }));
+            });
+
+            pendingBlocks.push(newBlock);
 
             res.status(200).send({
-                'blockHash': blockHash
+                'blockHash': newBlock.getHash()
+            });
+        } else {
+            res.status(400).send(BAD_REQUEST_RESPONSE);
+        }
+    } catch (err) {
+        res.status(500).send(ERROR_RESPONSE);
+        console.error(err);
+    }
+});
+
+app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
+    try {
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
+        }
+
+        const from = req.body.from;
+        const fromPrivateKey = req.body.fromPrivateKey;
+
+        if (from && fromPrivateKey && from.toString() === SHA256(fromPrivateKey).toString() && validators.list.includes(from)) {
+            const confirmedBlocks = [];
+
+            for (let i = 0; i < pendingBlocks.length; i++) {
+                blockchain.addBlock(pendingBlocks[i]);
+
+                confirmedBlocks.push(pendingBlocks[i].getHash());
+            }
+
+            res.status(200).send({
+                'blockHashes': confirmedBlocks
             });
         } else {
             res.status(400).send(BAD_REQUEST_RESPONSE);

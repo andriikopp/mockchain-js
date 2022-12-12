@@ -2,6 +2,21 @@
 
 🔗 MockchainJS is a lightweight, simple blockchain-inspired ledger that allows users easily and quickly achieve blockchain-like behavior for NodeJS.
 
+### 🛠 Algorithm
+MockchainJS uses a *simplified* **Proof of authority (PoA)** algorithm to add new blocks.
+It uses the ```list``` array containing addresses of authorized validators in the ```validators.js``` file:
+```javascript
+const list = [
+    '12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488'
+];
+```
+Authorized validators should use the ```/confirm``` API gateway to put new records in blockchain.
+This approach allows MockchainJS to deliver fast transactions.
+
+### 🔓 Security
+Each time blockchain is addressed through API endpoints, the chain is checked, and blocks starting from the first invalid one are rejected.
+The SHA256 encryption algorithm is used to check the consistency of the blockchain.
+
 ### Dependencies:
 - ⚙️ express
 - 🔐 crypto-js, crypto
@@ -87,7 +102,23 @@
     "blockHash": "e09d2c1684948c7b78433e25c9c9ad55f21e2f76e032c43208a42e465e738c8b"
 }
 ```
+---
+#### 🔴 /confirm
+- Method: **POST**
+- Request:
+```json
+{
+  "from": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488",
+  "fromPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"
+}
+```
+- Response:
+```json
+{
+    "blockHashes": ["a0fce24c1413b8a550fdd5a59c48eea15cc35478b97fed85ccf0843c0bc9ccfc", "999f9758bb4f853b4000e39c6be8a0006e3ecb2e38031389350a2cf735a69465", "762e2cefdb15c9e59c3381b79b3e2ed1c45ca6f8bda98366f16f806d1f92ce1a"]
+}
+```
 
 ### License
 ---
-MIT
+[MIT](https://github.com/andriikopp/mockchain-js/blob/main/LICENSE)
