@@ -1,11 +1,6 @@
 const SHA256 = require('crypto-js/sha256');
 const StormDB = require('stormdb');
 
-const engine = new StormDB.localFileEngine('./chain.json');
-const db = new StormDB(engine);
-
-db.default({ chain: [], hashList: {} });
-
 class Block {
     constructor(blockData = []) {
         this.blockTime = Date.now().toString();
@@ -16,14 +11,19 @@ class Block {
 }
 
 class Blockchain {
-    constructor() {
+    constructor(name) {
+        const engine = new StormDB.localFileEngine(`./${name}_chain.json`);
+        this.db = new StormDB(engine);
+
+        this.db.default({ chain: [], hashList: {} });
+
         this.chain = [new Block()];
         this.hashList = {};
         this.hashList[this.chain[0].blockHash] = 0;
 
-        if (db.get('chain').value().length > 0) {
-            this.chain = db.get('chain').value();
-            this.hashList = db.get('hashList').value();
+        if (this.db.get('chain').value().length > 0) {
+            this.chain = this.db.get('chain').value();
+            this.hashList = this.db.get('hashList').value();
         }
     }
 
@@ -50,8 +50,8 @@ class Blockchain {
         this.chain.push(Object.freeze(block));
         this.hashList[block.blockHash] = this.chain.length - 1;
 
-        db.set('chain', this.chain).save();
-        db.set('hashList', this.hashList).save();
+        this.db.set('chain', this.chain).save();
+        this.db.set('hashList', this.hashList).save();
 
         return block.blockHash;
     }
@@ -93,8 +93,8 @@ class Blockchain {
         this.chain = validChain;
         this.hashList = validHashList;
 
-        db.set('chain', this.chain).save();
-        db.set('hashList', this.hashList).save();
+        this.db.set('chain', this.chain).save();
+        this.db.set('hashList', this.hashList).save();
     }
 }
 

@@ -6,12 +6,22 @@ const { Block, Blockchain } = require('./blockchain.js');
 
 const validators = require('./validators.js');
 
-const app = express();
-const blockchain = new Blockchain();
+const argv = process.argv;
 
+if (argv.length < 5 || argv[2] !== '-n' || argv[4] !== '-p') {
+    console.log('\nWelcome to MockchainJS!\n\n' +
+        'Run node index.js with the following options:\n\n' +
+        '-n\tNode name\n-p\tPort number\n');
+    return;
+}
+
+const app = express();
+
+const blockchain = new Blockchain(argv[3]);
 const pendingBlocks = [];
 
-const PORT_NUMBER = 3000;
+const PORT_NUMBER = Number.parseInt(argv[5]);
+
 const ADDRESS_LENGTH = 64;
 
 const BAD_REQUEST_RESPONSE = {

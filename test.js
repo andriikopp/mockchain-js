@@ -1,11 +1,9 @@
 const assert = require('assert');
 const fs = require('fs');
 
-fs.unlinkSync('./chain.json');
-
 const { Block, Blockchain } = require('./blockchain.js');
 
-const blockchain = new Blockchain();
+const blockchain = new Blockchain('test');
 
 const previousBlockHash = blockchain.getLastBlock().blockHash;
 
@@ -36,3 +34,5 @@ blockchain.rejectInvalidBlocks();
 
 block = blockchain.getLastBlock();
 assert(block.blockHash = previousBlockHash);
+
+fs.unlinkSync('./test_chain.json');

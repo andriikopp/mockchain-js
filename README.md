@@ -37,6 +37,13 @@ In the future, the ```to``` property will be used to assign the contract's addre
 - 🔐 crypto-js, crypto
 - ⛈ stormdb
 
+### Running a node
+MockchainJS node starts using a simple command, such as the following:
+```shell
+node index.js -n n1 -p 3000
+```
+Here ```-n``` is the node name option and ```-p``` is the port number option. Both options are mandatory.
+
 ### API Endpoints
 ---
 #### 🟢 /account
