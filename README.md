@@ -63,7 +63,13 @@ node client.js -c block
 node client.js -c confirm
 > { "from": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488", "fromPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"}
 ```
-The list of active peers is given in the ```nodes``` array.
+The list of active peers is given in the ```nodes``` array:
+```javascript
+const nodes = [
+    'http://localhost:3001',
+    'http://localhost:3002'
+];
+```
 
 ### API Endpoints
 ---
