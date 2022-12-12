@@ -25,10 +25,12 @@ class Blockchain {
         this.hashList = {};
         this.hashList[this.chain[0].blockHash] = 0;
 
-        if (db.get('chain').length > 0) {
-            this.chain = db.get('chain');
-            this.hashList = db.get('hashList');
+        if (db.get('chain').value().length > 0) {
+            this.chain = db.get('chain').value();
+            this.hashList = db.get('hashList').value();
         }
+
+        console.log(this.chain);
     }
 
     getLastBlock() {
