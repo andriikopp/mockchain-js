@@ -3,7 +3,7 @@
 🔗 MockchainJS is a lightweight, simple blockchain-inspired ledger that allows users easily and quickly achieve blockchain-like behavior for NodeJS.
 
 ### 🛠 Algorithm
-MockchainJS uses a *simplified* **Proof of authority (PoA)** algorithm to add new blocks.
+MockchainJS uses a *simplified* **Proof of Authority (PoA)** algorithm to add new blocks.
 It uses the ```list``` array containing addresses of authorized validators in the ```validators.js``` file:
 ```javascript
 const list = [
