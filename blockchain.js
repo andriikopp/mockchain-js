@@ -29,8 +29,6 @@ class Blockchain {
             this.chain = db.get('chain').value();
             this.hashList = db.get('hashList').value();
         }
-
-        console.log(this.chain);
     }
 
     getLastBlock() {
