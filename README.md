@@ -19,7 +19,7 @@ The SHA256 encryption algorithm is used to check the consistency of the blockcha
 
 ### 🤖 Programmability
 MockchainJS offers simple programmability to execute *oversimplified* **smart-contracts** that should be given as the JavaScript code in the ```blockData.metadata``` property:
-```javascript
+```json
 {
   "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
   "fromPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
