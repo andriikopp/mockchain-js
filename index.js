@@ -104,21 +104,19 @@ app.post('/block', express.json({ type: '*/*' }), (req, res) => {
             blockchain.rejectInvalidBlocks();
         }
 
-        const from = req.body.from;
-        const fromPrivateKey = req.body.fromPrivateKey;
-        const to = req.body.to;
+        const senderAddress = req.body.senderAddress;
+        const senderPrivateKey = req.body.senderPrivateKey;
         const metadata = req.body.metadata;
         const timestamp = Number.parseInt(req.body.timestamp);
 
         const previousBlock = blockchain.getLastBlock();
 
-        if (from && fromPrivateKey && to && metadata && timestamp &&
-            from.toString() === SHA256(fromPrivateKey).toString() &&
+        if (senderAddress && senderPrivateKey && metadata && timestamp &&
+            senderAddress.toString() === SHA256(senderPrivateKey).toString() &&
             timestamp > Number.parseInt(previousBlock.blockTime)) {
 
             const newBlock = new Block(timestamp, {
-                'from': from,
-                'to': to,
+                'senderAddress': senderAddress,
                 'metadata': metadata
             });
 
@@ -142,13 +140,18 @@ app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
             blockchain.rejectInvalidBlocks();
         }
 
-        const from = req.body.from;
-        const fromPrivateKey = req.body.fromPrivateKey;
+        const validatorAddress = req.body.validatorAddress;
+        const validatorPrivateKey = req.body.validatorPrivateKey;
 
-        if (from && fromPrivateKey && from.toString() === SHA256(fromPrivateKey).toString() && validators.list.includes(from)) {
+        if (validatorAddress && validatorPrivateKey &&
+            validatorAddress.toString() === SHA256(validatorPrivateKey).toString() &&
+            validators.list.includes(validatorAddress)) {
+
             const confirmedBlocks = [];
 
             for (let i = 0; i < pendingBlocks.length; i++) {
+                pendingBlocks[i].blockData.confirmedBy = validatorAddress;
+
                 confirmedBlocks.push(blockchain.addBlock(new Block(pendingBlocks[i].blockTime, pendingBlocks[i].blockData)));
             }
 

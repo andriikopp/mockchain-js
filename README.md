@@ -21,9 +21,8 @@ The SHA256 encryption algorithm is used to check the consistency of the blockcha
 MockchainJS offers simple programmability to execute *oversimplified* **smart-contracts** that should be given as the JavaScript code in the ```blockData.metadata``` property:
 ```json
 {
-  "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-  "fromPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
-  "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "senderPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
   "metadata": "(x, y) => x + y",
   "timestamp": 1670771435228
 }
@@ -56,12 +55,12 @@ Here ```-c``` is the command that user wants to submit to a node:
 - ```block``` submits a new block, for example:
 ```shell
 node client.js -c block
-> { "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc", "fromPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc", "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc", "metadata": "MockchainJS is awesome!"}
+> { "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc", "senderPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc", "metadata": "MockchainJS is awesome!"}
 ```
 - ```confirm``` confirms pending blocks if the user is an authorized validator, for example:
 ```shell
 node client.js -c confirm
-> { "from": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488", "fromPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"}
+> { "validatorAddress": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488", "validatorPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"}
 ```
 The list of active peers is given in the ```nodes``` array:
 ```javascript
@@ -97,9 +96,9 @@ const nodes = [
 {
     "blockTime": "1670771435228",
     "blockData": {
-        "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-        "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-        "metadata": "MockchainJS is awesome!"
+        "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+        "metadata": "MockchainJS is awesome!",
+        "confirmedBy": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488"
     },
     "blockHash": "e09d2c1684948c7b78433e25c9c9ad55f21e2f76e032c43208a42e465e738c8b",
     "previousBlockHash": "9a052e006f51a7d78ce8e672b168ae54b779724900b96f52ab0b06fc940bdb65"
@@ -113,9 +112,9 @@ const nodes = [
 {
     "blockTime": "1670771435228",
     "blockData": {
-        "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-        "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-        "metadata": "MockchainJS is awesome!"
+        "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+        "metadata": "MockchainJS is awesome!",
+        "confirmedBy": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488"
     },
     "blockHash": "e09d2c1684948c7b78433e25c9c9ad55f21e2f76e032c43208a42e465e738c8b",
     "previousBlockHash": "9a052e006f51a7d78ce8e672b168ae54b779724900b96f52ab0b06fc940bdb65"
@@ -127,9 +126,8 @@ const nodes = [
 - Request:
 ```json
 {
-  "from": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
-  "fromPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
-  "to": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+  "senderPrivateKey": "1c69428f44b32bcd5441e1e370c83469f585169a908917fe9124157f6ca13aaf41a684b9cd47770b059c4ea0000e007fd928bf468d5b06d54f5df38c1e1984fc",
   "metadata": "MockchainJS is awesome!",
   "timestamp": 1670771435228
 }
@@ -146,8 +144,8 @@ const nodes = [
 - Request:
 ```json
 {
-  "from": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488",
-  "fromPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"
+  "validatorAddress": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488",
+  "validatorPrivateKey": "387e5da7215c16063e9b9b50f8da5d8f3a338c3c7f936e069a2bf9b595bfa948b2b9484b6662d9505f8a582c2a8c12c3fcd8f72ff4c836d0d4d1db4bf777b0bc"
 }
 ```
 - Response:
