@@ -84,6 +84,17 @@ For example, if your node's name is *n2*, run the following command:
 node sync.js -n n2
 ```
 
+### 📱 Web client
+The HTML client is available in the ```/app``` folder, its usage examples are given below:
+
+<img src="https://raw.githubusercontent.com/andriikopp/mockchain-js/main/figures/index.png" height="400">
+<img src="https://raw.githubusercontent.com/andriikopp/mockchain-js/main/figures/block.png" height="400">
+<img src="https://raw.githubusercontent.com/andriikopp/mockchain-js/main/figures/confirm.png" height="400">
+<img src="https://raw.githubusercontent.com/andriikopp/mockchain-js/main/figures/chain.png" height="400">
+
+Using the HTML client, users can create accounts, send blocks, confirm pending blocks (if they are authorized validators), and see the whole chain.
+By default, the web client connects to the node by address ```http://localhost:3001/account```. If necessary, this can be easily changed in the code of HTML pages.
+
 ### API Endpoints
 ---
 #### 🟢 /account
