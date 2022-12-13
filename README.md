@@ -33,11 +33,12 @@ Arguments should be passed as the string enclosed in parentheses, i.e. ```"(2, 2
 In the future, the ```to``` property will be used to assign the contract's address.
 
 ### Dependencies:
-- ⚙️ express
+- 🌐 express
 - 🔐 crypto-js, crypto
 - ⛈ stormdb
 - ❓ request
 - 🖥 prompt-sync
+- ⚙️ cors
 
 ### 🚀 Running a node
 MockchainJS node starts using a simple command, such as the following:
