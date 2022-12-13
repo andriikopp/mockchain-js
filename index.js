@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const crypto = require('crypto');
 const SHA256 = require('crypto-js/sha256');
 
@@ -17,6 +18,7 @@ if (argv.length < 6 || argv[2] !== '-n' || argv[4] !== '-p') {
 }
 
 const app = express();
+app.use(cors());
 
 const blockchain = new Blockchain(argv[3]);
 const pendingBlocks = [];
@@ -138,9 +140,13 @@ app.post('/block', express.json({ type: '*/*' }), (req, res) => {
 
             pendingBlocks.push(newBlock);
 
+            const newBlockHash = blockchain.getBlockHash(newBlock);
+
             res.status(200).send({
-                'blockHash': blockchain.getBlockHash(newBlock)
+                'blockHash': newBlockHash
             });
+
+            console.log(`${new Date().toLocaleString()} - Block ${newBlockHash} pending`);
         } else {
             res.status(400).send(BAD_REQUEST_RESPONSE);
         }
@@ -176,6 +182,10 @@ app.post('/confirm', express.json({ type: '*/*' }), (req, res) => {
             res.status(200).send({
                 'blockHashes': confirmedBlocks
             });
+
+            for (let i = 0; i < confirmedBlocks.length; i++) {
+                console.log(`${new Date().toLocaleString()} - Block ${confirmedBlocks[i]} confirmed`);
+            }
         } else {
             res.status(400).send(BAD_REQUEST_RESPONSE);
         }
@@ -211,5 +221,5 @@ app.post('/call', express.json({ type: '*/*' }), (req, res) => {
 });
 
 app.listen(PORT_NUMBER, () => {
-    console.log(`Listening on port ${PORT_NUMBER}`);
+    console.log(`MockchainJS node ${argv[3]} listening on port ${PORT_NUMBER}`);
 });
