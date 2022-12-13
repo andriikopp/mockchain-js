@@ -22,7 +22,11 @@ const sendPostRequest = (path, body) => {
         json: true,
         body: body
     }, function(error, response, body) {
-        console.log(response.body);
+        try {
+            console.log(response.body);
+        } catch (error) {
+            console.error(`WARNING!\tRequest ${path} failed:\t${error.message}`);
+        }
     });
 }
 

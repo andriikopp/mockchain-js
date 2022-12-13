@@ -98,6 +98,22 @@ app.get('/hash/:hash', (req, res) => {
     }
 });
 
+app.get('/chain', (req, res) => {
+    try {
+        if (!blockchain.isValid()) {
+            blockchain.rejectInvalidBlocks();
+        }
+
+        res.status(200).send({
+            'chain': blockchain.chain,
+            'hashList': blockchain.hashList
+        });
+    } catch (err) {
+        res.status(500).send(ERROR_RESPONSE);
+        console.error(err);
+    }
+});
+
 app.post('/block', express.json({ type: '*/*' }), (req, res) => {
     try {
         if (!blockchain.isValid()) {

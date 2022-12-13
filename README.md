@@ -70,6 +70,20 @@ const nodes = [
 ];
 ```
 
+### ♻️ Chain synchronization
+Use the ```sync.js``` util to synchronize your node with peers given in the array ```peers```:
+```javascript
+const peers = [
+    'http://localhost:3001',
+    'http://localhost:3002'
+];
+```
+**WARNING!** Shut down your node before running the synchronization tool or remove it from the list of peers.
+For example, if your node's name is *n2*, run the following command:
+```shell
+node sync.js -n n2
+```
+
 ### API Endpoints
 ---
 #### 🟢 /account
@@ -118,6 +132,35 @@ const nodes = [
     },
     "blockHash": "e09d2c1684948c7b78433e25c9c9ad55f21e2f76e032c43208a42e465e738c8b",
     "previousBlockHash": "9a052e006f51a7d78ce8e672b168ae54b779724900b96f52ab0b06fc940bdb65"
+}
+```
+---
+#### 🟢 /chain
+- Method: **GET**
+- Response:
+```json
+{
+    "chain": [{
+            "blockTime": "0",
+            "blockData": [],
+            "previousBlockHash": "",
+            "blockHash": "431bf5c814e384ce9fa40f655f4b94f7f6a8c8504ea4844c30c484ebf03121f1"
+        },
+        {
+            "blockTime": 1670924128758,
+            "blockData": {
+                "senderAddress": "cd6005508d123dfde8c255a01631fa4ee67dbe1f78c6172ebc6241676a6b6dbc",
+                "metadata": "MockchainJS is awesome!",
+                "confirmedBy": "12f91d12ae69b01feef0c9a1291a364e1fc7483ff4c1c4506c3ff4fc5971a488"
+            },
+            "previousBlockHash": "431bf5c814e384ce9fa40f655f4b94f7f6a8c8504ea4844c30c484ebf03121f1",
+            "blockHash": "5dfea2593f943ac8620c2a3ef6345c1c9815a7f2f3f53c16ec0ba40f6acedcb8"
+        }
+    ],
+    "hashList": {
+        "431bf5c814e384ce9fa40f655f4b94f7f6a8c8504ea4844c30c484ebf03121f1": 0,
+        "5dfea2593f943ac8620c2a3ef6345c1c9815a7f2f3f53c16ec0ba40f6acedcb8": 1
+    }
 }
 ```
 ---
