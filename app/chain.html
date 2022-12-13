@@ -76,29 +76,7 @@
         </div>
     </header>
     <section class="u-align-center u-clearfix u-section-1" id="sec-chain">
-        <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-            <div class="u-expanded-width u-table u-table-responsive u-table-1">
-                <table class="u-table-entity u-table-entity-1">
-                    <colgroup>
-                        <col width="20%">
-                        <col width="20%">
-                        <col width="20%">
-                        <col width="20%">
-                        <col width="20%">
-                    </colgroup>
-                    <thead class="u-black u-table-header u-table-header-1">
-                        <tr style="height: 21px;">
-                            <th class="u-border-1 u-border-black u-table-cell">Hash</th>
-                            <th class="u-border-1 u-border-black u-table-cell">Time</th>
-                            <th class="u-border-1 u-border-black u-table-cell">Sender</th>
-                            <th class="u-border-1 u-border-black u-table-cell">Validator</th>
-                            <th class="u-border-1 u-border-black u-table-cell">Metadata</th>
-                        </tr>
-                    </thead>
-                    <tbody class="u-table-body" id="chain-records">
-                    </tbody>
-                </table>
-            </div>
+        <div class="u-clearfix u-sheet u-valign-middle u-sheet-1" id="chain-records">
         </div>
     </section>
 </body>
@@ -109,13 +87,14 @@
             .then((response) => response.json())
             .then((data) => {
                 for (let i = data.chain.length - 1; i >= 0; i--) {
-                    $('#chain-records').append(`<tr style="height: 75px;">
-                        <td class="u-border-1 u-border-grey-30 u-table-cell">${data.chain[i].blockHash}</td>
-                        <td class="u-border-1 u-border-grey-30 u-table-cell">${new Date(data.chain[i].blockTime).toLocaleString()}</td>
-                        <td class="u-border-1 u-border-grey-30 u-table-cell">${data.chain[i].blockData.senderAddress}</td>
-                        <td class="u-border-1 u-border-grey-30 u-table-cell">${data.chain[i].blockData.confirmedBy}</td>
-                        <td class="u-border-1 u-border-grey-30 u-table-cell">${data.chain[i].blockData.metadata}</td>
-                    </tr>`);
+                    $('#chain-records').append(`<div style="word-break:break-all; margin-bottom: 15px;">
+                        <b>Block #${i + 1}</b><br>
+                        Hash:<br>${data.chain[i].blockHash}<br>
+                        Time:<br>${new Date(data.chain[i].blockTime).toLocaleString()}<br>
+                        Sender:<br>${data.chain[i].blockData.senderAddress}<br>
+                        Validator:<br>${data.chain[i].blockData.confirmedBy}<br>
+                        Metadata:<br>${data.chain[i].blockData.metadata}<br>
+                    </div>`);
                 }
             });
     } catch (error) {
